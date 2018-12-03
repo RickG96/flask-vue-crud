@@ -16,10 +16,13 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>foo</td>
-              <td>bar</td>
-              <td>foobar</td>
+            <tr v-for="(books, index) in books" :key="index">
+              <td>{{ books.title }}</td>
+              <td>{{ books.author }}</td>
+              <td>
+                <span v-if="books.read">Yes</span>
+                <span v-else>No</span>
+              </td>
               <td>
                 <button type="button" class="btn btn-warning btn-sm">Update</button>
                 <button type="button" class="btn btn-danger btn-sm">Delete</button>
@@ -31,3 +34,30 @@
     </div>
   </div>
 </template>
+
+<script>
+    import axios from 'axios';
+
+    export default {
+        data() {
+            return {
+                books: [],
+            };
+        },
+        methods: {
+            getBooks() {
+                const pathBooks = 'http://127.0.0.1:5000/books';
+                axios.get(pathBooks)
+                    .then((res) => {
+                        this.books = res.data.books;
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            },
+        },
+        created() {
+            this.getBooks();
+        },
+    };
+</script>
